@@ -1,3 +1,6 @@
+Google doc link(Candidate bug report) :
+ https://docs.google.com/document/d/1UeJo57eE3zPQFoVBF5HE9oKMQHSwnEjiIIrbSvPD4SA/edit?usp=sharing  
+
 # TECH ASSESSMENT
 
 This repository contains both the frontend (React/Vite) and the backend (Node.js/Express) for the IMDB Clone application.
