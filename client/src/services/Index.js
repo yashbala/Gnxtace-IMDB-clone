@@ -8,7 +8,7 @@ export const RegisterUser = async (data) => {
 
 // ================== producers  page start ================
 export const GetProducers = async (data) => {
-  const payload = data ? { ...data, naame: data.name, name: undefined } : data;
+  const payload = data ? { ...data, name: data.name, name: undefined } : data;
   return await requests.post(`producers/get-all`, payload);
 };
 export const CreateProducer = async (data) => {
@@ -19,7 +19,7 @@ export const UpdateProducer = async (id, data) => {
 };
 
 export const DeleteProducer = async (id) => {
-  return await requests.delete(`/producers/${id}`);
+  return await requests.delete(`producers/${id}`);
 };
 // ================== User page start================
 export const GetActor = async (data) => {
@@ -40,11 +40,11 @@ export const GetMovie = async (data) => {
   return await requests.post(`movies/get-all`, data);
 };
 export const CreateMovie = async (formData) => {
-  return await requests.post("/movies/", formData);
+  return await requests.post("movies", formData);
 };
 
 export const DeleteMovie = async (id) => {
-  return await requests.delete(`/movies/${id}`);
+  return await requests.delete(`movies/${id}`);
 };
 export const UpdateMovie = async (id, formData) => {
   return await requests.put(`movies/${id}`, formData);

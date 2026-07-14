@@ -17,7 +17,8 @@ const AddMovie = () => {
     actors: [],
   });
   const [imageFile, setImageFile] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [loadingData, setLoadingData] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [errors, setErrors] = useState({});
   const { actors } = useSelector(selectActor);
@@ -71,7 +72,7 @@ const AddMovie = () => {
   const onFinish = async () => {
     if (!validateForm()) return;
 
-    setLoading(true);
+    setIsSaving(true);
     try {
       const data = new FormData();
       data.append("name", formData.name);
@@ -83,7 +84,7 @@ const AddMovie = () => {
 
       const res = await CreateMovie(data);
       if (res.status == "success") {
-        const list = [res, ...movies];
+        const list = [res.data, ...movies];
         updateMovies(list);
         navigate(-1);
         showToast({
@@ -103,7 +104,7 @@ const AddMovie = () => {
       }
       console.log(err || "Something went wrong");
     } finally {
-      setLoading(false);
+      setIsSaving(false);
     }
   };
 
@@ -115,10 +116,10 @@ const AddMovie = () => {
   };
 
   useEffect(() => {
-    setLoading(true);
+    setLoadingData(true);
     Promise.all([fetchProducers(), fetchActors()])
-      .catch(() => {}) // Handle any unhandled errors
-      .finally(() => setLoading(false));
+      .catch(() => {})
+      .finally(() => setLoadingData(false));
   }, []);
 
   return (
@@ -285,11 +286,12 @@ const AddMovie = () => {
 
           <div style={{ marginTop: "30px" }}>
             <button
+              type="button"
               onClick={onFinish}
               className="add-movie-saveButton"
-              disabled={loading}
+              disabled={isSaving || loadingData}
             >
-              {loading ? "Saving..." : "Save"}
+              {isSaving ? "Saving..." : "Save"}
             </button>
           </div>
         </div>

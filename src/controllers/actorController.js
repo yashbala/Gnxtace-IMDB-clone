@@ -66,12 +66,22 @@ exports.updateActor = async (req, res) => {
       }/uploads/images/${req.file.filename}`;
     }
 
-    const dataToUpdate = {};
-    if (name) dataToUpdate.name = name;
-    if (gender) dataToUpdate.gender = gender;
-    if (dob) dataToUpdate.dob = dob;
-    if (bio) dataToUpdate.bio = bio;
-    if (image) dataToUpdate.image = image;
+
+   const dataToUpdate = {
+  name,
+  gender,
+  dob,
+  bio,
+};
+
+// New image uploaded
+if (req.file) {
+  dataToUpdate.image = image;
+}
+// Image explicitly removed
+else if ("image" in req.body) {
+  dataToUpdate.image = req.body.image; // null or existing URL
+}
 
     const updatedActor = await Actor.findByIdAndUpdate(actorId, dataToUpdate);
 

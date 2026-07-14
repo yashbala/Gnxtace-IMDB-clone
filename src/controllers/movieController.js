@@ -3,18 +3,24 @@ const { sendResponse } = require("../utils/response");
 
 exports.getAllMovies = async (req, res) => {
   try {
-    const { name, page = 1, limit = 10 } = req.body;
+    const { name, page, limit } = req.body;
     const filter = {};
     if (name) {
       filter.name = name;
     }
 
-    const offset = page * limit;
+    const pageNumber = page ? Number(page) : null;
+    const limitNumber = limit ? Number(limit) : null;
+    const offset =
+      pageNumber && limitNumber ? (pageNumber - 1) * limitNumber : undefined;
 
-    const movies = await Movie.find(filter, limit, offset);
+    const movies = await Movie.find(filter, limitNumber, offset);
 
     const db = require("../../database/db");
-    const totalCount = await db("movies").count("* as count").first();
+    const totalCount = await db("movies")
+      .whereNull("deleted_at")
+      .count("* as count")
+      .first();
 
     sendResponse(res, {
       data: movies,
@@ -119,7 +125,7 @@ exports.updateMovie = async (req, res) => {
     const dataToUpdate = {};
     if (name !== undefined) dataToUpdate.name = name;
     if (yearOfRelease !== undefined) dataToUpdate.yearOfRelease = yearOfRelease;
-    // if (plot !== undefined) dataToUpdate.plot = plot;
+    if (plot !== undefined) dataToUpdate.plot = plot;
     if (posterUrl !== undefined) dataToUpdate.poster = posterUrl;
     if (producer !== undefined) dataToUpdate.producer = producer;
     if (actors !== undefined) dataToUpdate.actors = actors;

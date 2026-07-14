@@ -40,9 +40,9 @@ const EditProducer = () => {
       }
     }
   };
-  useEffect(() => {
-    onLoad();
-  }, [id, producers]);
+ useEffect(() => {
+  onLoad();
+}, [id]);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -181,15 +181,23 @@ const EditProducer = () => {
             </div>
             <div className="edit-producer-form-row">
               <label className="edit-producer-label">Date of Birth</label>
-              <input
-                type="date"
-                value={formData.dob ? formData.dob.format("YYYY-MM-DD") : ""}
-                onChange={(e) =>
-                  setFormData({ ...formData, dob: moment(e.target.value) })
-                }
-                required
-                className="edit-producer-input"
-              />
+             <input
+  type="date"
+  value={formData.dob && formData.dob.isValid()
+    ? formData.dob.format("YYYY-MM-DD")
+    : ""}
+  onChange={(e) => {
+    console.log("Input:", e.target.value);
+    const m = moment(e.target.value);
+    console.log("Valid:", m.isValid());
+    setFormData({
+      ...formData,
+      dob: m,
+    });
+  }}
+  required
+  className="edit-producer-input"
+/>
             </div>
             <div className="edit-producer-form-row">
               <label className="edit-producer-label">Bio</label>

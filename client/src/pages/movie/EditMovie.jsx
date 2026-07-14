@@ -126,17 +126,19 @@ const EditMovie = () => {
       formData.actors.forEach((id) => data.append("actors[]", id));
       if (imageFile) data.append("poster", imageFile);
 
-      const res = await UpdateMovie(id, data);
-      if (res.data.id == id) {
-        console.log(res.message || "Movie updated successfully");
-        const list = movies.map((d) => (d.id == id ? res.data : d));
-        // updateMovies(list);
-        navigate(-1);
-        showToast({
-          message: res.message || "updated successfully",
-          type: "success",
-        });
-      }
+     const res = await UpdateMovie(id, data);
+
+if (res.status === "success") {
+  const list = movies.map((d) => (d.id == id ? res.data : d));
+  updateMovies(list);
+
+  navigate(-1);
+
+  showToast({
+    message: res.message || "Updated successfully",
+    type: "success",
+  });
+}
     } catch (err) {
       showToast({
         message: err?.response?.data?.message || "Something went wrong",

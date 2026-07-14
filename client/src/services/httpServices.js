@@ -1,23 +1,29 @@
 import axios from "axios";
 
+const baseURL = import.meta.env.VITE_APP_API_URL || "http://localhost:5000";
+
 const instance = axios.create({
-  baseURL: import.meta.env.VITE_APP_API_URL,
+  baseURL: `${baseURL}/api`,
   timeout: 500000,
   headers: {
     Accept: "application/json",
-    "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "*",
   },
 });
 
 instance.interceptors.request.use(function (config) {
   const token = localStorage.getItem("accessToken");
+  const headers = {
+    "Access-Control-Allow-Origin": "*",
+    Authorization: `Bearer ${token}`,
+  };
+
+  if (!(config.data instanceof FormData)) {
+    headers["Content-Type"] = "application/json";
+  }
+
   return {
     ...config,
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-      Authorization: `Bearer ${token}`,
-    },
+    headers,
   };
 });
 const responseBody = (response) => response.data;
